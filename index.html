@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine’s Day 💙</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body{
+  background:#000;
+  overflow:hidden;
+}
+
+/* Pages */
+.page{
+  display:none;
+  width:100vw;
+  height:100vh;
+  position:absolute;
+  inset:0;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.page.active{ display:flex; }
+
+/* Page 1 */
+.page1 h1{
+  font-size:2.4rem;
+  line-height:1.3;
+  z-index:2;
+}
+
+/* Letter button */
+.letter-btn{
+  font-size:5rem;
+  animation:pulse 1.5s infinite;
+  cursor:pointer;
+}
+
+@keyframes pulse{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.15); }
+  100%{ transform:scale(1); }
+}
+
+/* Letter box */
+.letter-box{
+  background:rgba(0,0,0,0.65);
+  border-radius:18px;
+  padding:22px;
+  max-width:720px;
+  max-height:85vh;
+  overflow-y:auto;
+  font-size:1rem;
+  line-height:1.65;
+  text-align:left;
+}
+
+/* Typing cursor */
+.cursor{
+  display:inline-block;
+  width:2px;
+  height:1em;
+  background:#fff;
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
+}
+
+/* Floating emojis */
+.heart{
+  position:absolute;
+  bottom:-20px;
+  animation:float 6s linear infinite;
+}
+
+@keyframes float{
+  0%{ transform:translateY(0); opacity:1;}
+  100%{ transform:translateY(-110vh); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 Background Music -->
+<audio id="bgMusic" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PAGE 1 -->
+<div class="page page1 active" onclick="goPage(2)">
+  <h1>Happy Valentine’s Day<br>Thankuuu 💙💙</h1>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page page2" id="page2">
+  <div class="letter-btn" onclick="startLetter()">💌</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page page3" id="page3">
+  <div class="letter-box">
+    <span id="typedText"></span><span class="cursor"></span>
+  </div>
+</div>
+
+<script>
+let currentPage = 1;
+const music = document.getElementById("bgMusic");
+
+/* Page switch */
+function goPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+n)?.classList.add('active');
+  currentPage = n;
+}
+
+/* Mobile-safe music start */
+document.body.addEventListener("click", ()=>{
+  if(music.paused){
+    music.volume = 0.6;
+    music.play().catch(()=>{});
+  }
+},{ once:true });
+
+/* Floating emojis */
+setInterval(()=>{
+  const el=document.createElement('div');
+  el.className='heart';
+
+  if(currentPage===3){
+    const emojis=['💙','🤍','💋'];
+    el.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+  }else{
+    el.innerText='💙';
+  }
+
+  el.style.left=Math.random()*100+'vw';
+  el.style.fontSize=(18+Math.random()*14)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),6000);
+},350);
+
+/* Letter typing text */
+const letterText = `My Moon 🌙,
+
+I know it’s hard for us to meet. And I know I keep arguing with you about meeting… but it’s never because I’m upset with you. It’s only because I miss you so much. Even though you take such good care of me, I still complain. All those little arguments? That’s just my love language 🫣.
+
+I just want to see you, sit with you, and enjoy every small moment together. I hope one day we won’t have to miss each other like this. One day, we will be forever ♾️ — laughing, talking, and living all our little moments side by side.
+
+You are the moon that came into my life and made my darkest nights beautiful. And one day, I will become like Neil Armstrong 😅 — and that day, the moon will be mine 🫠.
+
+I know sometimes I’m never satisfied with the care I give you. I feel like I should always do more. I also know I make you sad sometimes… and I’m sorry for that. It’s only because you are the only one I truly have, the one my heart chose.
+
+With all my love 💎
+Happy Valentine’s Day, my moon 🌙❤️
+
+Forever yours,
+Abee 🥰`;
+
+let i=0;
+function startLetter(){
+  goPage(3);
+  music.play().catch(()=>{});
+  const el=document.getElementById('typedText');
+  el.innerHTML="";
+  i=0;
+  const typing=setInterval(()=>{
+    el.innerHTML += letterText[i]==="\n" ? "<br>" : letterText[i];
+    i++;
+    if(i>=letterText.length) clearInterval(typing);
+  },35);
+}
+</script>
+
+</body>
+</html>
